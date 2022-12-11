@@ -3,7 +3,6 @@ export default {
   zh: {
     i18nView: {
       title: '切换语言',
-      note: '本项目国际化基于 vue-i18n',
       datePlaceholder: '请选择日期',
       selectPlaceholder: '请选择',
       tableDate: '日期',
@@ -23,7 +22,6 @@ export default {
   en: {
     i18nView: {
       title: 'Switch Language',
-      note: 'The internationalization of this project is based on vue-i18n',
       datePlaceholder: 'Pick a day',
       selectPlaceholder: 'Select',
       tableDate: 'tableDate',

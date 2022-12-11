@@ -73,7 +73,7 @@ export default {
     size: 'Global Size'
   },
   login: {
-    title: 'Login Form',
+    title: 'GuaZhou Manager System',
     logIn: 'Login',
     username: 'Username',
     password: 'Password',
@@ -171,5 +171,11 @@ export default {
     tagsView: 'Open Tags-View',
     fixedHeader: 'Fixed Header',
     sidebarLogo: 'Sidebar Logo'
+  },
+  role: {
+    roleKey: 'Role Key',
+    roleName: 'Role Name',
+    describe: 'Describe',
+    operations: 'Operations'
   }
 }

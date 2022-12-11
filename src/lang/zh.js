@@ -60,7 +60,7 @@ export default {
     exportZip: 'Export Zip',
     theme: '换肤',
     clipboardDemo: 'Clipboard',
-    i18n: '国际化',
+    i18n: '切换语言',
     externalLink: '外链',
     profile: '个人中心'
   },
@@ -73,7 +73,7 @@ export default {
     size: '布局大小'
   },
   login: {
-    title: '系统登录',
+    title: '瓜州运管平台',
     logIn: '登录',
     username: '账号',
     password: '密码',
@@ -171,5 +171,11 @@ export default {
     tagsView: '开启 Tags-View',
     fixedHeader: '固定 Header',
     sidebarLogo: '侧边栏 Logo'
+  },
+  role: {
+    roleKey: '角色',
+    roleName: '角色名称',
+    describe: '描述',
+    operations: '操作'
   }
 }
