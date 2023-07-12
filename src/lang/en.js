@@ -62,7 +62,15 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: 'I18n',
     externalLink: 'External Link',
-    profile: 'Profile'
+    profile: 'Profile',
+    sku: 'SKU',
+    quotation: 'Quotation',
+    profit: 'Profit',
+    develop: 'Develop',
+    purchase: 'Purchase',
+    operation: 'Operation',
+    purchaseSaleStock: 'PurchaseSaleStock',
+    asinDatabase: 'AsinDatabase'
   },
   navbar: {
     dashboard: 'Dashboard',
@@ -73,7 +81,7 @@ export default {
     size: 'Global Size'
   },
   login: {
-    title: 'GuaZhou Manager System',
+    title: 'TangYing',
     logIn: 'Login',
     username: 'Username',
     password: 'Password',
@@ -123,6 +131,7 @@ export default {
     reviewer: 'reviewer',
     id: 'ID',
     date: 'Date',
+    dep_date: 'Depdate',
     author: 'Author',
     readings: 'Readings',
     status: 'Status',
@@ -132,7 +141,17 @@ export default {
     draft: 'Draft',
     delete: 'Delete',
     cancel: 'Cancel',
-    confirm: 'Confirm'
+    confirm: 'Confirm',
+    stockName: 'stockName',
+    latest: 'latest',
+    currency_value: 'currency_value',
+    limit_up_type: 'limit_up_type',
+    high_days: 'high_days',
+    order_amount: 'order_amount',
+    is_again_limit: 'is_again_limit',
+    first_limit_up_time: 'first_limit_up_time',
+    last_limit_up_time: 'last_limit_up_time'
+
   },
   example: {
     warning: 'Creating and editing pages cannot be cached by keep-alive because keep-alive include does not currently support caching based on routes, so it is currently cached based on component name. If you want to achieve a similar caching effect, you can use a browser caching scheme such as localStorage. Or do not use keep-alive include to cache all pages directly. See details'

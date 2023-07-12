@@ -62,7 +62,15 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: '切换语言',
     externalLink: '外链',
-    profile: '个人中心'
+    profile: '个人中心',
+    sku: 'SKU',
+    quotation: '盘面',
+    profit: '利润',
+    develop: '开发',
+    purchase: '采购',
+    operation: '运营',
+    purchaseSaleStock: 'SKU管理',
+    asinDatabase: 'ASIN管理'
   },
   navbar: {
     dashboard: '首页',
@@ -73,7 +81,7 @@ export default {
     size: '布局大小'
   },
   login: {
-    title: '瓜州运管平台',
+    title: '复盘笔记',
     logIn: '登录',
     username: '账号',
     password: '密码',
@@ -121,8 +129,10 @@ export default {
     add: '添加',
     export: '导出',
     reviewer: '审核人',
+    manager: '负责人',
     id: '序号',
     date: '时间',
+    dep_date: '开发日期',
     author: '作者',
     readings: '阅读数',
     status: '状态',
@@ -132,7 +142,23 @@ export default {
     draft: '草稿',
     delete: '删除',
     cancel: '取 消',
-    confirm: '确 定'
+    confirm: '确 定',
+    stockName: '名称',
+    latest: '最新价',
+    currency_value: '流通市值',
+    limit_up_type: '涨停形态',
+    high_days: '几天几板',
+    order_amount: '封单额',
+    is_again_limit: '封板次数',
+    first_limit_up_time: '首封时间',
+    last_limit_up_time: '末封时间',
+    reason_type: '涨停原因',
+    increase: '涨跌幅',
+    sixty_days_increase: '60天涨幅',
+    year_increase: '年涨幅',
+    rank: '市场排名',
+    zyyw: '主营业务',
+    jyfw: '主营范围'
   },
   example: {
     warning: '创建和编辑页面是不能被 keep-alive 缓存的，因为keep-alive 的 include 目前不支持根据路由来缓存，所以目前都是基于 component name 来进行缓存的。如果你想类似的实现缓存效果，可以使用 localStorage 等浏览器缓存方案。或者不要使用 keep-alive 的 include，直接缓存所有页面。详情见'

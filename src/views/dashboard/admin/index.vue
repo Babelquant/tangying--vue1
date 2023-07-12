@@ -1,96 +1,74 @@
 <template>
   <div class="dashboard-editor-container">
-    <!-- <github-corner class="github-corner" /> -->
-
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <!-- <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
+    </el-row> -->
+    <el-button type="primary" size="mini" icon="el-icon-arrow-left" @click="changeLimupDate(-1)">前一天</el-button>
+    <el-date-picker
+      v-model="limit_up_date"
+      type="date"
+      size="small"
+      placeholder="选择涨停时间"
+      style="margin-bottom: 8px;"
+    />
+    <el-button type="primary" size="mini" icon="el-icon-arrow-right" @click="changeLimupDate(1)">后一天</el-button>
+    <el-row :gutter="2">
+      <el-col :xs="24" :sm="24" :lg="18">
+        <div class="chart-wrapper">
+          <limitup-stock-table :limit_up_date="limit_up_date" @handleSetConceptRankChartData="handleSetConceptRankChartData" />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="6">
+        <div class="chart-wrapper">
+          <concept-rank-chart :chart-data="conceptRankChartData" />
+        </div>
+      </el-col>
     </el-row>
 
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <raddar-chart />
-        </div>
+    <el-row :gutter="2">
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 14}" :lg="{span: 14}" :xl="{span: 14}" style="padding-right:8px;margin-bottom:30px;">
+        <concept-table />
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <todo-list />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <box-card />
+      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 10}" :lg="{span: 10}" :xl="{span: 10}" style="margin-bottom:30px;">
+        <continue-board-chart />
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-// import GithubCorner from '@/components/GithubCorner'
-import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import PieChart from './components/PieChart'
-import BarChart from './components/BarChart'
-import TransactionTable from './components/TransactionTable'
-import TodoList from './components/TodoList'
-import BoxCard from './components/BoxCard'
-
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
+import LimitupStockTable from './components/LimitupStockTable'
+import ConceptTable from './components/ConceptTable'
+import ConceptRankChart from './components/ConceptRankChart'
+import ContinueBoardChart from './components/ContinueBoardChart'
 
 export default {
   name: 'DashboardAdmin',
   components: {
-    // GithubCorner,
-    PanelGroup,
-    LineChart,
-    RaddarChart,
-    PieChart,
-    BarChart,
-    TransactionTable,
-    TodoList,
-    BoxCard
+    LimitupStockTable,
+    ConceptTable,
+    ConceptRankChart,
+    ContinueBoardChart
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      conceptRankChartData: [],
+      limit_up_date: new Date()
     }
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
+    handleSetConceptRankChartData(data) {
+      this.conceptRankChartData = data
+    },
+    changeLimupDate(day) {
+      // 这种直接修改对象属性的方式，并不会触发 Vue 的响应式更新机制，因此limitup-stock-table组件无法感知到limit_up_date的变化,
+      // 可以使用 Vue 提供的this.$set()方法来更新limit_up_date的值，这样就能触发 Vue 的响应式更新机制，让limitup-stock-table组件能够监听到变化
+      // this.limit_up_date.setDate(this.limit_up_date.getDate() + day)
+      const newDate = new Date(this.limit_up_date.getTime())
+      newDate.setDate(newDate.getDate() + day)
+      this.$set(this, 'limit_up_date', newDate)
     }
   }
 }
@@ -98,7 +76,7 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 32px;
+  padding: 16px;
   background-color: rgb(240, 242, 245);
   position: relative;
 

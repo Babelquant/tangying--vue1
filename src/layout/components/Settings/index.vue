@@ -16,7 +16,7 @@
       <!-- <a v-if="isShowJob" href="https://panjiachen.github.io/vue-element-admin-site/zh/job/" target="_blank" class="job-link"> -->
       <a v-if="isShowJob" class="job-link">
         <el-alert
-          title="大家有什么需求或好的建议可以找周博"
+          title="欢迎使用瓜舟电子商务数字化平台！如发现系统bug，及时反馈周博-_-"
           type="success"
           :closable="false"
         />

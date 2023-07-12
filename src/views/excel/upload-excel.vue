@@ -21,14 +21,14 @@ export default {
   },
   methods: {
     beforeUpload(file) {
-      const isLt1M = file.size / 1024 / 1024 < 1
+      const isLt1M = file.size / 1024 / 1024 < 2
 
       if (isLt1M) {
         return true
       }
 
       this.$message({
-        message: 'Please do not upload files larger than 1m in size.',
+        message: 'Please do not upload files larger than 2m in size.',
         type: 'warning'
       })
       return false

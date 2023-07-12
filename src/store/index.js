@@ -19,7 +19,26 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 
 const store = new Vuex.Store({
   modules,
-  getters
+  getters,
+  state: {
+    asinGroupList: [], // 这里定义一个空数组作为 GroupPane 组件的 list 变量
+    currYear: null
+  },
+  mutations: {
+    setAsinGroupList(state, list) {
+      // state.asinGroupList = list.map(item => {
+      //   if (item.variation_rate === null) {
+      //     return { ...item, variation_rate: 1 }
+      //   } else {
+      //     return item
+      //   }
+      // })
+      state.asinGroupList = list
+    },
+    setCurrentYear(state, v) {
+      state.currYear = v
+    }
+  }
 })
 
 export default store
