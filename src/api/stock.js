@@ -12,7 +12,7 @@ export function fetchStockCandlestick(query) {
   return request({
     url: '/data/candlestick',
     method: 'get',
-    timeout: 10000,
+    timeout: 20000,
     params: query
   })
 }

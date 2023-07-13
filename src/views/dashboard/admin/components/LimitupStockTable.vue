@@ -144,8 +144,8 @@ export default {
     handleNameClick(row) {
       this.stockName = row.name
       this.dialogCdstVisible = true
+      this.code = row.code
       this.$set(this, 'code', row.code)
-      console.log("over code:",this.code)
     },
     handlePopShow(code) {
       this.chart = echarts.init(this.$refs[code])

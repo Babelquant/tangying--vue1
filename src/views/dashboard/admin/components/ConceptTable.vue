@@ -29,7 +29,7 @@
     >
       <el-table-column :label="$t('table.stockName')" width="80px" align="left">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span @click="handleNameClick(row)">{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.latest')" width="75px" align="left">
@@ -79,6 +79,10 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog :visible.sync="dialogCdstVisible" :title="stockName" width="60%">
+      <candlestick-chart :code="code" />
+    </el-dialog>
   </div>
 </template>
 
@@ -91,6 +95,9 @@ export default {
     return {
       popLoading: false,
       conceptLoading: false,
+      dialogCdstVisible: false,
+      stockName: '',
+      code: '',
       allconcepts: [],
       search_concepts: null,
       list: null,
@@ -153,7 +160,12 @@ export default {
       }
       this.chart.dispose()
       this.chart = null
-    }
+    },
+    handleNameClick(row) {
+      this.stockName = row.name
+      this.dialogCdstVisible = true
+      this.$set(this, 'code', row.code)
+    },
   }
 }
 </script>

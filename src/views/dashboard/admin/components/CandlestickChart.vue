@@ -40,11 +40,15 @@ export default {
   watch: {
     code: {
       handler(val) {
+        this.chart.clear()
         fetchStockCandlestick({ code: val }).then(res => {
           this.setOptions(res.data)
         })
       }
     }
+    // code(newVal,oldVal) {
+    //     console.log("new val")
+    // }
   },
   mounted() {
     this.$nextTick(() => {
@@ -192,13 +196,13 @@ export default {
         },
         grid: [
           {
-            left: '2%',
-            right: '5%',
+            left: '5%',
+            right: '10%',
             height: '50%'
           },
           {
-            left: '2%',
-            right: '5%',
+            left: '5%',
+            right: '10%',
             top: '68%',
             height: '16%'
           }
