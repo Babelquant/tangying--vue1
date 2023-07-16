@@ -26,10 +26,12 @@ export function fetchStockHistoryRank(query) {
   })
 }
 
-export function fetchCtnBoardStockList() {
+export function fetchLimitupTwoList(query) {
   return request({
-    url: '/data/continueBoard/list',
-    method: 'get'
+    url: '/data/limitup_two/list',
+    method: 'get',
+    timeout: 0,
+    params: query
   })
 }
 

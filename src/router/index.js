@@ -71,6 +71,19 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/concept',
+    component: Layout,
+    redirect: '/concept/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/concept/index'),
+        name: 'Concept',
+        meta: { title: '概念', icon: 'el-icon-guide' }
+      }
+    ]
+  },
+  {
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
@@ -80,7 +93,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: 'profile', icon: 'user', noCache: true }
+        meta: { title: 'profile', icon: 'user' }
       }
     ]
   }

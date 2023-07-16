@@ -6,7 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
-import { fetchCtnBoardStockList } from '@/api/stock'
+import { fetchLimitUpList } from '@/api/stock'
 
 export default {
   mixins: [resize],
@@ -48,7 +48,7 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-      fetchCtnBoardStockList().then(res => {
+      fetchLimitUpList({high_days: ["首板","2天2板","3天3板"]}).then(res => {
         this.setOptions(res.data)
       })
     },
@@ -60,25 +60,35 @@ export default {
       // 格式化数据集 [日期 首板数 2天2板数 3天3板数 首板票 2天2板票 3天3板票 1进2淘汰票 2进3淘汰票 1进2成功率 2进3成功率]
       for (let i = 0; i < sortedDates.length; ++i) {
         const filter_date = sortedDates[i]
-        const stocks_1 = data.slice(0).filter(function(d) { return d['date'] === filter_date && d['high_days'] === '首板' })
-        const stocks_2 = data.slice(0).filter(function(d) { return d['date'] === filter_date && d['high_days'] === '2天2板' })
-        const stocks_3 = data.slice(0).filter(function(d) { return d['date'] === filter_date && d['high_days'] === '3天3板' })
+        const stocks_1 = data.slice(0).reduce((acc, item) => {
+          if (item.date === filter_date && item.high_days === '首板') {
+            return acc + 1
+          }
+          return acc
+        }, 0)
+        const stocks_2 = data.slice(0).reduce((acc, item) => {
+          if (item.date === filter_date && item.high_days === '2天2板') {
+            return acc + 1
+          }
+          return acc
+        }, 0)
+        const stocks_3 = data.slice(0).reduce((acc, item) => {
+          if (item.date === filter_date && item.high_days === '3天3板') {
+            return acc + 1
+          }
+          return acc
+        }, 0)
         dataSet.push([
           sortedDates[i],
-          stocks_1.length,
-          stocks_2.length,
-          stocks_3.length,
           stocks_1,
           stocks_2,
           stocks_3
         ])
       }
-      dataSet[0].push(null, null, null, null)
+      dataSet[0].push(null, null)
       for (let i = 1; i < dataSet.length; ++i) {
         // 淘汰票
         dataSet[i].push(
-          dataSet[i - 1][4].filter(item1 => { return !dataSet[i][5].some(item2 => item2.code === item1.code) }),
-          dataSet[i - 1][5].filter(item2 => { return !dataSet[i][6].some(item3 => item3.code === item2.code) }),
           // 成功率
           (dataSet[i][2] / dataSet[i - 1][1] * 100).toFixed(0),
           (dataSet[i][3] / dataSet[i - 1][2] * 100).toFixed(0)
@@ -100,11 +110,16 @@ export default {
         legend: { data: ['1进2', '2进3', '1进2成功率', '2进3成功率'] },
         grid: {
           left: '5%',
-          right: '6%',
-          top: '10%',
+          right: '10%',
+          top: '20%',
           bottom: '15%'
           // containLabel: true
         },
+        dataZoom: [
+          {
+            type: 'inside'
+          }
+        ],
         xAxis: [
           {
             // boundaryGap: [0, 0.01],
@@ -169,7 +184,7 @@ export default {
             yAxisIndex: 1,
             encode: {
               x: 0,
-              y: 9,
+              y: 4,
               tooltip: 9
             }
           },
@@ -180,7 +195,7 @@ export default {
             yAxisIndex: 1,
             encode: {
               x: 0,
-              y: 10,
+              y: 5,
               tooltip: 10
             }
           }

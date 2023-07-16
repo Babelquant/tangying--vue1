@@ -5,11 +5,11 @@
 <script>
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
-import resize from './mixins/resize'
+// import resize from './mixins/resize'
 import { fetchStockCandlestick } from '@/api/stock'
 
 export default {
-  mixins: [resize],
+  // mixins: [resize],
   props: {
     className: {
       type: String,
@@ -65,7 +65,9 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-      // this.setOptions(this.chartData)
+      fetchStockCandlestick({ code: this.code }).then(res => {
+        this.setOptions(res.data)
+      })
     },
     setOptions(val) {
       const upColor = '#00da3c'

@@ -3,41 +3,42 @@
     <el-table
       v-if="list"
       :data="list.filter(d => !high_days_search || d.high_days.toLowerCase().includes(high_days_search.toLowerCase()))"
-      height="300"
-      style="width: 100%"
+      height="420"
       :tooltip-options="tooltipOptions"
     >
-      <el-table-column :label="$t('table.stockName')" width="90px" align="left">
+      <el-table-column :label="$t('table.stockName')" width="90px" align="left" fixed="left">
         <template slot-scope="{row}">
           <span @click="handleNameClick(row)">{{ row.name }}</span>
-          <el-tag v-if="row.is_again_limit" size="small">回封</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="latest" :label="$t('table.latest')" sortable width="90px" align="left">
+      <el-table-column prop="latest" :label="$t('table.latest')" width="75px" align="left">
         <template slot-scope="{row}">
           <span>{{ row.latest }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="currency_value" :label="$t('table.currency_value')" sortable width="100px" align="left">
+      <el-table-column prop="increase" :label="$t('table.increase')" width="75px" align="left">
+        <template slot-scope="{row}">
+          <span :style="{'color':row.increase>0?'red':'green'}">{{ row.increase }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="currency_value" :label="$t('table.currency_value')" width="85px" align="left">
         <template slot-scope="{row}">
           <span>{{ (row.currency_value/Math.pow(10,8)).toFixed(0) }}亿</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.limit_up_type')" width="90px" align="left">
+      <el-table-column :label="$t('table.limit_up_type')" width="85px" align="left">
         <template slot-scope="{row}">
           <span>{{ row.limit_up_type }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.high_days')" width="90px" align="left">
-        <template slot="header" slot-scope="scope">
-          <el-input
-            v-model="high_days_search"
-            size="mini"
-            placeholder="几天几板"
-          />
-        </template>
+      <el-table-column label="振幅" width="75px" align="left">
         <template slot-scope="{row}">
-          <span>{{ row.high_days }}</span>
+          <span>{{ row.swing }}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="换手率" width="80px" align="left">
+        <template slot-scope="{row}">
+          <span>{{ row.change_rate }}%</span>
         </template>
       </el-table-column>
       <el-table-column prop="order_amount" :label="$t('table.order_amount')" sortable width="90px" align="left">
@@ -45,17 +46,12 @@
           <span>{{ row.order_amount>Math.pow(10,8)?(row.order_amount/Math.pow(10,8)).toFixed(0)+'亿':(row.order_amount/10000).toFixed(0)+'万' }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column :label="$t('table.is_again_limit')" width="100px" align="left">
-        <template slot-scope="{row}">
-          <span>{{ row.is_again_limit }}</span>
-        </template>
-      </el-table-column> -->
-      <el-table-column prop="first_limit_up_time" :label="$t('table.first_limit_up_time')" sortable width="100px" align="left">
+      <el-table-column prop="first_limit_up_time" :label="$t('table.first_limit_up_time')" width="85px" align="left">
         <template slot-scope="{row}">
           <span>{{ row.first_limit_up_time | parseTime('{h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.last_limit_up_time')" width="90px" align="left">
+      <el-table-column :label="$t('table.last_limit_up_time')" width="85px" align="left">
         <template slot-scope="{row}">
           <span>{{ row.last_limit_up_time | parseTime('{h}:{i}:{s}') }}</span>
         </template>
@@ -86,16 +82,15 @@
 import echarts from 'echarts'
 import CandlestickChart from './CandlestickChart'
 
-import { fetchLimitUpList, fetchStockHistoryRank } from '@/api/stock'
-import { parseTime } from '@/utils'
+import { fetchStockHistoryRank } from '@/api/stock'
 
 export default {
   components: {
     CandlestickChart
   },
   props: {
-    limit_up_date: {
-      type: Date
+    table_data: {
+      type: Array
     }
   },
   data() {
@@ -105,6 +100,7 @@ export default {
       high_days_search: '',
       code: '',
       stockName: '',
+      tableLoading: false,
       popLoading: false,
       dialogCdstVisible: false,
       tooltipOptions: {
@@ -119,28 +115,16 @@ export default {
     }
   },
   watch: {
-    limit_up_date: {
+    table_data: {
       handler(val) {
-        fetchLimitUpList({ date: parseTime(val, '{y}-{m}-{d}') }).then(response => {
-          this.list = response.data
-          const conceptData = this.list.map(item => item.reason_type).join('+').split('+')
-          this.$emit('handleSetConceptRankChartData', conceptData)
-        })
+        this.list = val
       }
     }
   },
   created() {
-    this.fetchData()
+    this.list = this.table_data
   },
   methods: {
-    fetchData() {
-      fetchLimitUpList({ date: parseTime(this.limit_up_date, '{y}-{m}-{d}') }).then(response => {
-        this.list = response.data
-        const conceptData = this.list.map(item => item.reason_type).join('+').split('+')
-        // console.log(conceptData)
-        this.$emit('handleSetConceptRankChartData', conceptData)
-      })
-    },
     handleNameClick(row) {
       this.stockName = row.name
       this.dialogCdstVisible = true
