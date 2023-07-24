@@ -24,7 +24,7 @@
     "core-js": "3.6.5",
     "driver.js": "0.9.5",
     "dropzone": "5.5.1",
-    "echarts": "^4.2.1",
+    "echarts": "^5.4.3",
     "element-ui": "^2.15.13",
     "exceljs": "^4.3.0",
     "file-saver": "2.0.1",

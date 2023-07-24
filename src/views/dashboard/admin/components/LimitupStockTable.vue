@@ -6,14 +6,15 @@
       height="300"
       style="width: 100%"
       :tooltip-options="tooltipOptions"
+      :row-class-name="tableRowClassName"
     >
       <el-table-column :label="$t('table.stockName')" width="90px" align="left">
         <template slot-scope="{row}">
           <span @click="handleNameClick(row)">{{ row.name }}</span>
-          <el-tag v-if="row.is_again_limit" size="small">回封</el-tag>
+          <!-- <el-tag v-if="row.is_again_limit" size="small">回封</el-tag> -->
         </template>
       </el-table-column>
-      <el-table-column prop="latest" :label="$t('table.latest')" sortable width="90px" align="left">
+      <el-table-column prop="latest" :label="$t('table.latest')" sortable width="88px" align="left">
         <template slot-scope="{row}">
           <span>{{ row.latest }}</span>
         </template>
@@ -28,7 +29,7 @@
           <span>{{ row.limit_up_type }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.high_days')" width="90px" align="left">
+      <el-table-column :label="$t('table.high_days')" width="100px" align="left">
         <template slot="header" slot-scope="scope">
           <el-input
             v-model="high_days_search"
@@ -42,7 +43,7 @@
       </el-table-column>
       <el-table-column prop="order_amount" :label="$t('table.order_amount')" sortable width="90px" align="left">
         <template slot-scope="{row}">
-          <span>{{ row.order_amount>Math.pow(10,8)?(row.order_amount/Math.pow(10,8)).toFixed(0)+'亿':(row.order_amount/10000).toFixed(0)+'万' }}</span>
+          <span>{{ row.order_amount>Math.pow(10,8)?(row.order_amount/Math.pow(10,8)).toFixed(1)+'亿':(row.order_amount/10000).toFixed(0)+'万' }}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column :label="$t('table.is_again_limit')" width="100px" align="left">
@@ -64,13 +65,11 @@
         <template slot-scope="{row}">
           <el-popover placement="top-start" width="500" trigger="click" @show="handlePopShow(row.code)" @hide="handlePopHide">
             <div :ref="row.code" v-loading="popLoading" style="width: 480px;height: 300px" />
-            <div slot="reference">
-              <el-button type="text" icon="el-icon-s-data" />
-            </div>
+            <el-button slot="reference" type="text" icon="el-icon-s-data" />
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.reason_type')" width="200px" align="left">
+      <el-table-column :label="$t('table.reason_type')" align="left">
         <template slot-scope="{row}">
           <span>{{ row.reason_type }}</span>
         </template>
@@ -83,7 +82,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 import CandlestickChart from './CandlestickChart'
 
 import { fetchLimitUpList, fetchStockHistoryRank } from '@/api/stock'
@@ -123,8 +122,8 @@ export default {
       handler(val) {
         fetchLimitUpList({ date: parseTime(val, '{y}-{m}-{d}') }).then(response => {
           this.list = response.data
-          const conceptData = this.list.map(item => item.reason_type).join('+').split('+')
-          this.$emit('handleSetConceptRankChartData', conceptData)
+          const data = this.processLimitUpData(this.list)
+          this.$emit('handleSetLimitUpData', data)
         })
       }
     }
@@ -136,10 +135,47 @@ export default {
     fetchData() {
       fetchLimitUpList({ date: parseTime(this.limit_up_date, '{y}-{m}-{d}') }).then(response => {
         this.list = response.data
-        const conceptData = this.list.map(item => item.reason_type).join('+').split('+')
-        // console.log(conceptData)
-        this.$emit('handleSetConceptRankChartData', conceptData)
+        const data = this.processLimitUpData(this.list)
+        this.$emit('handleSetLimitUpData', data)
       })
+    },
+    processLimitUpData(arr) {
+      const concept_data = arr.map(item => item.reason_type).join('+').split('+')
+      const total_count = arr.reduce((acc, obj) => {
+        if (obj.is_open === 0) {
+          return acc + 1
+        } else {
+          return acc
+        }
+      }, 0)
+      const first_count = arr.reduce((acc, obj) => {
+        if (obj.is_open === 0 && obj.high_days === '首板') {
+          return acc + 1
+        } else {
+          return acc
+        }
+      }, 0)
+      const two_count = arr.reduce((acc, obj) => {
+        if (obj.is_open === 0 && obj.high_days === '2天2板') {
+          return acc + 1
+        } else {
+          return acc
+        }
+      }, 0)
+      const three_count = arr.reduce((acc, obj) => {
+        if (obj.is_open === 0 && obj.high_days === '3天3板') {
+          return acc + 1
+        } else {
+          return acc
+        }
+      }, 0)
+      return {
+        conceptData: concept_data,
+        totalCount: total_count,
+        firstCount: first_count,
+        twoCount: two_count,
+        threeCount: three_count
+      }
     },
     handleNameClick(row) {
       this.stockName = row.name
@@ -147,7 +183,9 @@ export default {
       this.$set(this, 'code', row.code)
     },
     handlePopShow(code) {
-      this.chart = echarts.init(this.$refs[code])
+      this.$nextTick(() => {
+        this.chart = echarts.init(this.$refs[code])
+      })
       this.popLoading = true
       fetchStockHistoryRank({ code: code }).then(res => {
         this.chart.setOption({
@@ -185,12 +223,21 @@ export default {
       }
       this.chart.dispose()
       this.chart = null
+    },
+    tableRowClassName({row}) {
+      if (row.is_open === 1) {
+        return 'warning-row'
+      }
+      return ''
     }
   }
 }
 </script>
-<style scoped>
+<style>
   .tooltip-container {
     width: 300px;
+  }
+  .el-table .warning-row {
+    background: #67C23A;
   }
 </style>

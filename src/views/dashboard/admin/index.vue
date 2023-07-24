@@ -6,19 +6,30 @@
       <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
         <line-chart :chart-data="lineChartData" />
       </el-row> -->
-      <el-button type="primary" size="mini" icon="el-icon-arrow-left" @click="changeLimupDate(-1)">前一天</el-button>
-      <el-date-picker
-        v-model="limit_up_date"
-        type="date"
-        size="small"
-        placeholder="选择涨停时间"
-        style="margin-bottom: 8px;"
-      />
-      <el-button type="primary" size="mini" icon="el-icon-arrow-right" @click="changeLimupDate(1)">后一天</el-button>
+      <el-row>
+        <el-col :xs="24" :sm="24" :lg="7">
+          <el-button type="primary" size="mini" icon="el-icon-arrow-left" @click="changeLimupDate(-1)">前一天</el-button>
+          <el-date-picker
+            v-model="limit_up_date"
+            type="date"
+            size="mini"
+            placeholder="选择涨停时间"
+          />
+          <el-button type="primary" size="mini" icon="el-icon-arrow-right" @click="changeLimupDate(1)">后一天</el-button>
+        </el-col>
+        <el-col :xs="24" :sm="24" :lg="8">
+          <el-descriptions v-model="limitUpCount" class="row-wrapper" column="4">
+            <el-descriptions-item label="涨停数">{{ limitUpCount.totalCount }}</el-descriptions-item>
+            <el-descriptions-item label="首板数">{{ limitUpCount.firstCount }}</el-descriptions-item>
+            <el-descriptions-item label="2板数">{{ limitUpCount.twoCount }}</el-descriptions-item>
+            <el-descriptions-item label="3板数">{{ limitUpCount.threeCount }}</el-descriptions-item>
+          </el-descriptions>
+        </el-col>
+      </el-row>
       <el-row :gutter="2">
         <el-col :xs="24" :sm="24" :lg="18">
           <div class="chart-wrapper">
-            <limitup-stock-table :limit_up_date="limit_up_date" @handleSetConceptRankChartData="handleSetConceptRankChartData" />
+            <limitup-stock-table :limit_up_date="limit_up_date" @handleSetLimitUpData="handleSetLimitUpData" />
           </div>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="6">
@@ -80,6 +91,12 @@ export default {
       limitup: [],
       limitup2: [],
       limitup3: [],
+      limitUpCount: {
+        totalCount: null,
+        firstCount: null,
+        twoCount: null,
+        threeCount: null
+      },
       conceptRankChartData: [],
       limit_up_date: new Date()
     }
@@ -103,8 +120,10 @@ export default {
     })
   },
   methods: {
-    handleSetConceptRankChartData(data) {
-      this.conceptRankChartData = data
+    handleSetLimitUpData(data) {
+      this.conceptRankChartData = data.conceptData
+      const newCount = Object.assign({}, data, { 'conceptData': undefined })
+      this.$set(this, 'limitUpCount', newCount)
     },
     changeLimupDate(day) {
       // 这种直接修改对象属性的方式，并不会触发 Vue 的响应式更新机制，因此limitup-stock-table组件无法感知到limit_up_date的变化,
@@ -142,5 +161,9 @@ export default {
   .chart-wrapper {
     padding: 8px;
   }
+}
+
+.row-wrapper {
+  margin-bottom: 8px;
 }
 </style>

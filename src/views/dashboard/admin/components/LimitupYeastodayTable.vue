@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column prop="order_amount" :label="$t('table.order_amount')" sortable width="90px" align="left">
         <template slot-scope="{row}">
-          <span>{{ row.order_amount>Math.pow(10,8)?(row.order_amount/Math.pow(10,8)).toFixed(0)+'亿':(row.order_amount/10000).toFixed(0)+'万' }}</span>
+          <span>{{ row.order_amount>Math.pow(10,8)?(row.order_amount/Math.pow(10,8)).toFixed(1)+'亿':(row.order_amount/10000).toFixed(0)+'万' }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="first_limit_up_time" :label="$t('table.first_limit_up_time')" width="85px" align="left">
@@ -60,9 +60,7 @@
         <template slot-scope="{row}">
           <el-popover placement="top-start" width="500" trigger="click" @show="handlePopShow(row.code)" @hide="handlePopHide">
             <div :ref="row.code" v-loading="popLoading" style="width: 480px;height: 300px" />
-            <div slot="reference">
-              <el-button type="text" icon="el-icon-s-data" />
-            </div>
+            <el-button slot="reference" type="text" icon="el-icon-s-data" />
           </el-popover>
         </template>
       </el-table-column>
@@ -79,7 +77,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 import CandlestickChart from './CandlestickChart'
 
 import { fetchStockHistoryRank } from '@/api/stock'
@@ -131,7 +129,9 @@ export default {
       this.$set(this, 'code', row.code)
     },
     handlePopShow(code) {
-      this.chart = echarts.init(this.$refs[code])
+      this.$nextTick(() => {
+        this.chart = echarts.init(this.$refs[code])
+      })
       this.popLoading = true
       fetchStockHistoryRank({ code: code }).then(res => {
         this.chart.setOption({

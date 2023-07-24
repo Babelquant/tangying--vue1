@@ -1,9 +1,13 @@
 <template>
+  <!-- <div>
+    <p class="stock-info-annotation">公司亮点：{{ zyyw.lightspot }}</p>
+    <p class="stock-info-annotation">主营业务：{{ zyyw.major }}</p>
+  </div> -->
   <div :class="className" :style="{height:height,width:width}" />
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 // import resize from './mixins/resize'
 import { fetchStockCandlestick } from '@/api/stock'
@@ -340,3 +344,9 @@ export default {
   }
 }
 </script>
+<style>
+  .stock-info-annotation {
+      margin-left: 20px;
+      margin-top: 5px;
+  }
+</style>

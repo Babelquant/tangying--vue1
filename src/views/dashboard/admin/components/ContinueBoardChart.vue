@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
 import { fetchLimitUpList } from '@/api/stock'
@@ -61,19 +61,19 @@ export default {
       for (let i = 0; i < sortedDates.length; ++i) {
         const filter_date = sortedDates[i]
         const stocks_1 = data.slice(0).reduce((acc, item) => {
-          if (item.date === filter_date && item.high_days === '首板') {
+          if (item.date === filter_date && item.high_days === '首板' && item.is_open === 0) {
             return acc + 1
           }
           return acc
         }, 0)
         const stocks_2 = data.slice(0).reduce((acc, item) => {
-          if (item.date === filter_date && item.high_days === '2天2板') {
+          if (item.date === filter_date && item.high_days === '2天2板' && item.is_open === 0) {
             return acc + 1
           }
           return acc
         }, 0)
         const stocks_3 = data.slice(0).reduce((acc, item) => {
-          if (item.date === filter_date && item.high_days === '3天3板') {
+          if (item.date === filter_date && item.high_days === '3天3板' && item.is_open === 0) {
             return acc + 1
           }
           return acc

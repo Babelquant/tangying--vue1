@@ -52,6 +52,14 @@ export function fetchConceptList() {
   })
 }
 
+export function fetchConceptHot() {
+  return request({
+    url: '/data/concept_hot',
+    method: 'get',
+    timeout: 0
+  })
+}
+
 export function fetchTrendComment(query) {
   return request({
     url: '/data/trendcomment/list',

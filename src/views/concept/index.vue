@@ -3,7 +3,16 @@
     <el-row :gutter="2">
       <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
-          <concept-table />
+          <concept-hot-chart />
+        </div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="2">
+      <el-col :xs="24" :sm="24" :lg="24">
+        <div class="chart-wrapper">
+          <keep-alive>
+            <concept-table />
+          </keep-alive>
         </div>
       </el-col>
     </el-row>
@@ -12,12 +21,12 @@
 
 <script>
 import ConceptTable from './components/ConceptTable'
-// import { fetchLimitupTwoList } from '@/api/stock'
-// import { parseTime } from '@/utils'
+import ConceptHotChart from './components/ConceptHotChart'
 
 export default {
   components: {
-    ConceptTable
+    ConceptTable,
+    ConceptHotChart
   },
   data() {
     return {
