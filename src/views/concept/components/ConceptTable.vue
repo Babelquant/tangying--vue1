@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'
 import CandlestickChart from '@/views/dashboard/admin/components/CandlestickChart'
 import { fetchConceptList, fetchConceptStockList, fetchStockHistoryRank } from '@/api/stock'
 
