@@ -2,7 +2,7 @@
   <div>
     <el-table
       v-if="list"
-      :data="list.filter(d => !high_days_search || d.high_days.toLowerCase().includes(high_days_search.toLowerCase()))"
+      :data="dataList"
       :height="height"
       :tooltip-options="tooltipOptions"
     >
@@ -64,12 +64,19 @@
       <el-table-column label="排名" width="50px" align="center">
         <template slot-scope="{row}">
           <el-popover placement="top-start" width="500" trigger="click" @show="handlePopShow(row.code)" @hide="handlePopHide">
-            <div :ref="row.code" v-loading="popLoading" style="width: 480px;height: 300px" />
+            <div :ref="row.code" v-loading="popLoading" class="popover-chart" />
             <el-button slot="reference" type="text" icon="el-icon-s-data" />
           </el-popover>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.reason_type')" width="200px" align="left">
+        <template slot="header" slot-scope="scope">
+          <el-input
+            v-model="reason_type_search"
+            size="mini"
+            placeholder="涨停原因"
+          />
+        </template>
         <template slot-scope="{row}">
           <span>{{ row.reason_type }}</span>
         </template>
@@ -104,9 +111,9 @@ export default {
     return {
       list: null,
       chart: null,
-      high_days_search: '',
       code: '',
       stockName: '',
+      reason_type_search: '',
       tableLoading: false,
       popLoading: false,
       dialogCdstVisible: false,
@@ -119,6 +126,13 @@ export default {
         //   y: 10
         // }
       }
+    }
+  },
+  computed: {
+    dataList() {
+      return this.list.filter(d => 
+        (!this.reason_type_search || d.reason_type.toLowerCase().includes(this.reason_type_search.toLowerCase()))
+      )
     }
   },
   watch: {
@@ -138,9 +152,10 @@ export default {
       this.$set(this, 'code', row.code)
     },
     handlePopShow(code) {
-      this.$nextTick(() => {
-        this.chart = echarts.init(this.$refs[code])
-      })
+      // this.$nextTick(() => {
+      //   this.chart = echarts.init(this.$refs[code])
+      // })
+      this.chart = echarts.init(this.$refs[code])
       this.popLoading = true
       fetchStockHistoryRank({ code: code }).then(res => {
         this.chart.setOption({
@@ -185,5 +200,10 @@ export default {
 <style scoped>
   .tooltip-container {
     width: 300px;
+  }
+
+  .popover-chart {
+    width: 480px;
+    height: 300px;
   }
 </style>

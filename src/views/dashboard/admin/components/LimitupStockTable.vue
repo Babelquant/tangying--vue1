@@ -2,7 +2,7 @@
   <div>
     <el-table
       v-if="list"
-      :data="list.filter(d => !high_days_search || d.high_days.toLowerCase().includes(high_days_search.toLowerCase()))"
+      :data="dataList"
       height="300"
       style="width: 100%"
       :tooltip-options="tooltipOptions"
@@ -70,6 +70,13 @@
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.reason_type')" align="left">
+        <template slot="header" slot-scope="scope">
+          <el-input
+            v-model="reason_type_search"
+            size="mini"
+            placeholder="涨停原因"
+          />
+        </template>
         <template slot-scope="{row}">
           <span>{{ row.reason_type }}</span>
         </template>
@@ -101,7 +108,9 @@ export default {
     return {
       list: null,
       chart: null,
+      timer: null,
       high_days_search: '',
+      reason_type_search: '',
       code: '',
       stockName: '',
       popLoading: false,
@@ -117,6 +126,14 @@ export default {
       }
     }
   },
+  computed: {
+    dataList() {
+      return this.list.filter(d => 
+        (!this.high_days_search || d.high_days.toLowerCase().includes(this.high_days_search.toLowerCase())) &&
+        (!this.reason_type_search || d.reason_type && d.reason_type.toLowerCase().includes(this.reason_type_search.toLowerCase()))
+      )
+    }
+  },
   watch: {
     limit_up_date: {
       handler(val) {
@@ -130,6 +147,12 @@ export default {
   },
   created() {
     this.fetchData()
+    this.timer = setInterval(() => {
+      this.fetchData()
+    }, 1000*60*5)
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
   methods: {
     fetchData() {

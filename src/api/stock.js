@@ -26,7 +26,7 @@ export function fetchStockHistoryRank(query) {
   })
 }
 
-export function fetchLimitupTwoList(query) {
+export function fetchCtnLimitupList(query) {
   return request({
     url: '/data/limitup_two/list',
     method: 'get',

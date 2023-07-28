@@ -2,11 +2,18 @@
   <div>
     <el-table
       v-if="list"
-      :data="list.filter(d => !high_days_search || d.high_days.toLowerCase().includes(high_days_search.toLowerCase()))"
+      :data="dataList"
       height="420"
       :tooltip-options="tooltipOptions"
     >
       <el-table-column :label="$t('table.stockName')" width="90px" align="left" fixed="left">
+        <template slot="header" slot-scope="scope">
+          <el-input
+            v-model="name_search"
+            size="mini"
+            placeholder="名称"
+          />
+        </template>
         <template slot-scope="{row}">
           <span @click="handleNameClick(row)">{{ row.name }}</span>
         </template>
@@ -65,6 +72,13 @@
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.reason_type')" width="200px" align="left">
+        <template slot="header" slot-scope="scope">
+          <el-input
+            v-model="reason_type_search"
+            size="mini"
+            placeholder="涨停原因"
+          />
+        </template>
         <template slot-scope="{row}">
           <span>{{ row.reason_type }}</span>
         </template>
@@ -95,7 +109,8 @@ export default {
     return {
       list: null,
       chart: null,
-      high_days_search: '',
+      reason_type_search: '',
+      name_search: '',
       code: '',
       stockName: '',
       tableLoading: false,
@@ -110,6 +125,14 @@ export default {
         //   y: 10
         // }
       }
+    }
+  },
+  computed: {
+    dataList() {
+      return this.list.filter(d => 
+        (!this.name_search || d.name.toLowerCase().includes(this.name_search.toLowerCase())) &&
+        (!this.reason_type_search || d.reason_type.toLowerCase().includes(this.reason_type_search.toLowerCase()))
+      )
     }
   },
   watch: {

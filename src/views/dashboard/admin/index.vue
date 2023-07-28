@@ -18,12 +18,10 @@
           <el-button type="primary" size="mini" icon="el-icon-arrow-right" @click="changeLimupDate(1)">后一天</el-button>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="8">
-          <el-descriptions v-model="limitUpCount" class="row-wrapper" column="4">
-            <el-descriptions-item label="涨停数">{{ limitUpCount.totalCount }}</el-descriptions-item>
-            <el-descriptions-item label="首板数">{{ limitUpCount.firstCount }}</el-descriptions-item>
-            <el-descriptions-item label="2板数">{{ limitUpCount.twoCount }}</el-descriptions-item>
-            <el-descriptions-item label="3板数">{{ limitUpCount.threeCount }}</el-descriptions-item>
-          </el-descriptions>
+          <el-tag>涨停数 ：{{ limitUpCount.totalCount }}</el-tag>
+          <el-tag>首板数 ：{{ limitUpCount.firstCount }}</el-tag>
+          <el-tag>2板数 ：{{ limitUpCount.twoCount }}</el-tag>
+          <el-tag>3板数 ：{{ limitUpCount.threeCount }}</el-tag>
         </el-col>
       </el-row>
       <el-row :gutter="2">
@@ -74,7 +72,7 @@ import ConceptRankChart from './components/ConceptRankChart'
 import ContinueBoardChart from './components/ContinueBoardChart'
 import LimitupAnalizeTable from './components/LimitupAnalizeTable.vue'
 import LimitupYeastodayTable from './components/LimitupYeastodayTable.vue'
-import { fetchLimitupTwoList } from '@/api/stock'
+import { fetchCtnLimitupList } from '@/api/stock'
 import { parseTime } from '@/utils'
 
 export default {
@@ -88,6 +86,7 @@ export default {
   },
   data() {
     return {
+      timer: null,
       limitup: [],
       limitup2: [],
       limitup3: [],
@@ -104,26 +103,30 @@ export default {
   watch: {
     limit_up_date: {
       handler(val) {
-        fetchLimitupTwoList({ date: parseTime(val, '{y}-{m}-{d}') }).then(response => {
-          this.limitup = response.data.yeastoday_data
-          this.limitup2 = response.data.today_data2
-          this.limitup3 = response.data.today_data3
-        })
+        this.handleFetchCtnLimitupList(val)
       }
     }
   },
   created() {
-    fetchLimitupTwoList({ date: parseTime(this.limit_up_date, '{y}-{m}-{d}') }).then(response => {
-      this.limitup = response.data.yeastoday_data
-      this.limitup2 = response.data.today_data2
-      this.limitup3 = response.data.today_data3
-    })
+    this.handleFetchCtnLimitupList(this.limit_up_date)
+    this.timer = setInterval(() => {
+      this.handleFetchCtnLimitupList(this.limit_up_date)
+    }, 1000 * 60 * 5)
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
   methods: {
+    handleFetchCtnLimitupList(t) {
+      fetchCtnLimitupList({ date: parseTime(t, '{y}-{m}-{d}') }).then(response => {
+        this.limitup = response.data.yeastoday_data
+        this.limitup2 = response.data.today_data2
+        this.limitup3 = response.data.today_data3
+      })
+    },
     handleSetLimitUpData(data) {
       this.conceptRankChartData = data.conceptData
-      const newCount = Object.assign({}, data, { 'conceptData': undefined })
-      this.$set(this, 'limitUpCount', newCount)
+      this.$set(this, 'limitUpCount', data)
     },
     changeLimupDate(day) {
       // 这种直接修改对象属性的方式，并不会触发 Vue 的响应式更新机制，因此limitup-stock-table组件无法感知到limit_up_date的变化,
