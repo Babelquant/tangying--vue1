@@ -144,6 +144,7 @@ export default {
     cancel: '取 消',
     confirm: '确 定',
     stockName: '名称',
+    time_preview: '昨日分时预览',
     latest: '最新价',
     currency_value: '流通市值',
     limit_up_type: '涨停形态',

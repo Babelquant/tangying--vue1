@@ -31,6 +31,11 @@
           <span>{{ row.limit_up_type }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('table.time_preview')" width="190px" align="left">
+        <template slot-scope="{row}">
+          <preview-chart :data="row.time_preview" />
+        </template>
+      </el-table-column>
       <el-table-column label="次日开盘" width="80px" align="left">
         <template slot-scope="{row}">
           <span :style="{'color':row.open>0?'red':'green'}">{{ row.open }}%</span>
@@ -69,7 +74,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.reason_type')" width="200px" align="left">
+      <el-table-column :label="$t('table.reason_type')" align="left">
         <template slot="header" slot-scope="scope">
           <el-input
             v-model="reason_type_search"
@@ -91,12 +96,14 @@
 <script>
 import * as echarts from 'echarts'
 import CandlestickChart from './CandlestickChart'
+import PreviewChart from './PreviewChart'
 
 import { fetchStockHistoryRank } from '@/api/stock'
 
 export default {
   components: {
-    CandlestickChart
+    CandlestickChart,
+    PreviewChart
   },
   props: {
     table_data: {
@@ -144,6 +151,7 @@ export default {
   },
   created() {
     this.list = this.table_data
+    console.log(this.list)
   },
   methods: {
     handleNameClick(row) {

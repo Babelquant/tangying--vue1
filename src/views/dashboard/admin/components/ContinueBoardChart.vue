@@ -90,8 +90,8 @@ export default {
         // 淘汰票
         dataSet[i].push(
           // 成功率
-          (dataSet[i][2] / dataSet[i - 1][1] * 100).toFixed(0),
-          (dataSet[i][3] / dataSet[i - 1][2] * 100).toFixed(0)
+          parseInt(dataSet[i][2] / dataSet[i - 1][1] * 100),
+          parseInt(dataSet[i][3] / dataSet[i - 1][2] * 100)
         )
       }
       this.chart.setOption({
@@ -182,6 +182,9 @@ export default {
             type: 'line',
             smooth: false,
             yAxisIndex: 1,
+            tooltip: {
+              valueFormatter: (value) => value + '%'
+            },
             encode: {
               x: 0,
               y: 4,
@@ -193,6 +196,9 @@ export default {
             type: 'line',
             smooth: false,
             yAxisIndex: 1,
+            tooltip: {
+              valueFormatter: (value) => value + '%'
+            },
             encode: {
               x: 0,
               y: 5,

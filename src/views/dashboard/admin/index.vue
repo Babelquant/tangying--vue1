@@ -48,7 +48,7 @@
       </el-row>
       <p>1进2</p>
       <el-row :gutter="2">
-        <el-col :xs="24" :sm="24" :lg="20">
+        <el-col :xs="24" :sm="24" :lg="24">
           <div class="chart-wrapper">
             <limitup-analize-table :table_data="limitup2" />
           </div>
@@ -56,7 +56,7 @@
       </el-row>
       <p>2进3</p>
       <el-row :gutter="2">
-        <el-col :xs="24" :sm="24" :lg="20">
+        <el-col :xs="24" :sm="24" :lg="24">
           <div class="chart-wrapper">
             <limitup-analize-table :table_data="limitup3" :height="300" />
           </div>
