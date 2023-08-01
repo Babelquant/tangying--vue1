@@ -71,7 +71,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.reason_type')" width="200px" align="left">
+      <el-table-column :label="$t('table.reason_type')" align="left">
         <template slot="header" slot-scope="scope">
           <el-input
             v-model="reason_type_search"
@@ -84,7 +84,11 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialogCdstVisible" :title="stockName" width="60%">
+    <el-dialog :visible.sync="dialogCdstVisible" width="60%">
+      <template slot="title">
+        <span>{{ stockName }}</span>
+        <span class="candlestick-title">{{ zyyw }}</span>
+      </template>
       <candlestick-chart :code="code" />
     </el-dialog>
   </div>
@@ -94,7 +98,7 @@
 import * as echarts from 'echarts'
 import CandlestickChart from './CandlestickChart'
 
-import { fetchStockHistoryRank } from '@/api/stock'
+import { fetchStockHistoryRank, fetchStockZy } from '@/api/stock'
 
 export default {
   components: {
@@ -113,6 +117,7 @@ export default {
       name_search: '',
       code: '',
       stockName: '',
+      zyyw: '',
       tableLoading: false,
       popLoading: false,
       dialogCdstVisible: false,
@@ -148,7 +153,10 @@ export default {
   methods: {
     handleNameClick(row) {
       this.stockName = row.name
-      this.dialogCdstVisible = true
+      fetchStockZy({code: row.code}).then(res => {
+        this.zyyw = res.data
+        this.dialogCdstVisible = true
+      })
       this.$set(this, 'code', row.code)
     },
     handlePopShow(code) {
@@ -199,5 +207,9 @@ export default {
 <style scoped>
   .tooltip-container {
     width: 300px;
+  }
+  .candlestick-title {
+    margin-left: 10px;
+    font-size: 5;
   }
 </style>

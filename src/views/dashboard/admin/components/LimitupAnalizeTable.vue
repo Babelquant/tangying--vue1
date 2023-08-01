@@ -31,7 +31,12 @@
           <span>{{ row.limit_up_type }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.time_preview')" width="190px" align="left">
+      <el-table-column :label="$t('table.last_time_preview')" width="150px" align="left">
+        <template slot-scope="{row}">
+          <preview-chart :data="row.last_time_preview" />
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.time_preview')" width="150px" align="left">
         <template slot-scope="{row}">
           <preview-chart :data="row.time_preview" />
         </template>
@@ -144,6 +149,7 @@ export default {
   },
   watch: {
     table_data: {
+      deep: true,
       handler(val) {
         this.list = val
       }
@@ -151,7 +157,6 @@ export default {
   },
   created() {
     this.list = this.table_data
-    console.log(this.list)
   },
   methods: {
     handleNameClick(row) {

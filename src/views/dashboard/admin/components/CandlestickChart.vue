@@ -21,7 +21,7 @@ export default {
     },
     width: {
       type: String,
-      default: '1050px'
+      default: '100%'
     },
     height: {
       type: String,
@@ -203,12 +203,12 @@ export default {
         grid: [
           {
             left: '5%',
-            right: '10%',
+            right: '2%',
             height: '50%'
           },
           {
             left: '5%',
-            right: '10%',
+            right: '2%',
             top: '68%',
             height: '16%'
           }

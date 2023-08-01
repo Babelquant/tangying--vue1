@@ -82,7 +82,11 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialogCdstVisible" :title="stockName" width="60%">
+    <el-dialog :visible.sync="dialogCdstVisible" width="60%">
+      <template slot="title">
+        <span>{{ stockName }}</span>
+        <span class="candlestick-title">{{ zyyw }}</span>
+      </template>
       <candlestick-chart :code="code" />
     </el-dialog>
   </div>
@@ -92,7 +96,7 @@
 import * as echarts from 'echarts'
 import CandlestickChart from './CandlestickChart'
 
-import { fetchLimitUpList, fetchStockHistoryRank } from '@/api/stock'
+import { fetchLimitUpList, fetchStockHistoryRank, fetchStockZy } from '@/api/stock'
 import { parseTime } from '@/utils'
 
 export default {
@@ -113,6 +117,7 @@ export default {
       reason_type_search: '',
       code: '',
       stockName: '',
+      zyyw: '',
       popLoading: false,
       dialogCdstVisible: false,
       tooltipOptions: {
@@ -202,7 +207,10 @@ export default {
     },
     handleNameClick(row) {
       this.stockName = row.name
-      this.dialogCdstVisible = true
+      fetchStockZy({code: row.code}).then(res => {
+        this.zyyw = res.data
+        this.dialogCdstVisible = true
+      })
       this.$set(this, 'code', row.code)
     },
     handlePopShow(code) {
@@ -262,5 +270,9 @@ export default {
   }
   .el-table .warning-row {
     background: #67C23A;
+  }
+  .candlestick-title {
+    margin-left: 10px;
+    font-size: 5;
   }
 </style>

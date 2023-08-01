@@ -35,6 +35,14 @@ export function fetchCtnLimitupList(query) {
   })
 }
 
+export function fetchStockZy(query) {
+  return request({
+    url: '/data/zy',
+    method: 'get',
+    params: query
+  })
+}
+
 export function fetchConceptStockList(query) {
   return request({
     url: '/data/conceptStock/list',
