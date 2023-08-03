@@ -208,8 +208,8 @@ export default {
   .tooltip-container {
     width: 300px;
   }
-  .candlestick-title {
+  /* .candlestick-title {
     margin-left: 10px;
-    font-size: 5;
-  }
+    font-size: 5px;
+  } */
 </style>

@@ -65,7 +65,7 @@ export default {
         series: [
           {
             type: 'line',
-            smooth: true,
+            showSymbol: false,
             data: val
           }
         ]

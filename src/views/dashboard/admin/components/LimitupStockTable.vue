@@ -272,7 +272,7 @@ export default {
     background: #67C23A;
   }
   .candlestick-title {
-    margin-left: 10px;
-    font-size: 5;
+    margin-left: 20px;
+    font-size: 5px;
   }
 </style>
