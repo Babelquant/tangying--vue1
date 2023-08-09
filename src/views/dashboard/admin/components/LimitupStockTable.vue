@@ -24,11 +24,11 @@
           <span>{{ (row.currency_value/Math.pow(10,8)).toFixed(0) }}亿</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.limit_up_type')" width="90px" align="left">
+      <!-- <el-table-column :label="$t('table.limit_up_type')" width="90px" align="left">
         <template slot-scope="{row}">
           <span>{{ row.limit_up_type }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column :label="$t('table.high_days')" width="100px" align="left">
         <template slot="header" slot-scope="scope">
           <el-input
@@ -39,6 +39,11 @@
         </template>
         <template slot-scope="{row}">
           <span>{{ row.high_days }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('table.time_preview')" width="150px" align="left">
+        <template slot-scope="{row}">
+          <preview-chart :data="row.time_preview" />
         </template>
       </el-table-column>
       <el-table-column prop="order_amount" :label="$t('table.order_amount')" sortable width="90px" align="left">
@@ -95,13 +100,15 @@
 <script>
 import * as echarts from 'echarts'
 import CandlestickChart from './CandlestickChart'
+import PreviewChart from './PreviewChart'
 
 import { fetchLimitUpList, fetchStockHistoryRank, fetchStockZy } from '@/api/stock'
 import { parseTime } from '@/utils'
 
 export default {
   components: {
-    CandlestickChart
+    CandlestickChart,
+    PreviewChart
   },
   props: {
     limit_up_date: {

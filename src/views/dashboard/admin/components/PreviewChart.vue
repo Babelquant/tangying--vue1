@@ -14,7 +14,7 @@ export default {
     },
     width: {
       type: String,
-      default: '190px'
+      default: '100%'
     },
     height: {
       type: String,
@@ -28,6 +28,13 @@ export default {
       type: Array,
       default: function() {
         return [];
+      }
+    }
+  },
+  watch: {
+    data: {
+      handler(val) {
+        this.setOptions(val)
       }
     }
   },

@@ -1,6 +1,8 @@
 export default {
   route: {
     dashboard: '首页',
+    concept: '概念',
+    abnormal: '异动',
     documentation: '文档',
     guide: '引导页',
     permission: '权限测试页',
@@ -144,6 +146,7 @@ export default {
     cancel: '取 消',
     confirm: '确 定',
     stockName: '名称',
+    rank_change: '排名上升',
     time_preview: '今日分时预览',
     last_time_preview: '昨日分时预览',
     latest: '最新价',

@@ -35,6 +35,15 @@ export function fetchCtnLimitupList(query) {
   })
 }
 
+export function fetchAbnormalRank(query) {
+  return request({
+    url: '/data/rank_big_change',
+    method: 'get',
+    timeout: 0,
+    params: query
+  })
+}
+
 export function fetchStockZy(query) {
   return request({
     url: '/data/zy',

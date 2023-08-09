@@ -79,7 +79,20 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/concept/index'),
         name: 'Concept',
-        meta: { title: '概念', icon: 'el-icon-guide' }
+        meta: { title: 'concept', icon: 'el-icon-guide' }
+      }
+    ]
+  },
+  {
+    path: '/abnormal',
+    component: Layout,
+    redirect: '/abnormal/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/abnormal/index'),
+        name: 'Abnormal',
+        meta: { title: 'abnormal', icon: 'el-icon-s-opportunity' }
       }
     ]
   },

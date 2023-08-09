@@ -18,16 +18,16 @@
           <span @click="handleNameClick(row)">{{ row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="latest" :label="$t('table.latest')" width="75px" align="left">
+      <el-table-column prop="latest" label="昨日涨停价" width="75px" align="left">
         <template slot-scope="{row}">
           <span>{{ row.latest }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="increase" :label="$t('table.increase')" width="75px" align="left">
+      <!-- <el-table-column prop="increase" :label="$t('table.increase')" width="75px" align="left">
         <template slot-scope="{row}">
           <span :style="{'color':row.increase>0?'red':'green'}">{{ row.increase }}%</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="currency_value" :label="$t('table.currency_value')" width="85px" align="left">
         <template slot-scope="{row}">
           <span>{{ (row.currency_value/Math.pow(10,8)).toFixed(0) }}亿</span>
@@ -38,14 +38,19 @@
           <span>{{ row.limit_up_type }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="振幅" width="75px" align="left">
+      <el-table-column :label="$t('table.high_days')" width="85px" align="left">
+        <template slot-scope="{row}">
+          <span>{{ row.high_days }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="振幅" width="75px" align="left">
         <template slot-scope="{row}">
           <span>{{ row.swing }}%</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="换手率" width="80px" align="left">
         <template slot-scope="{row}">
-          <span>{{ row.change_rate }}%</span>
+          <span>{{ (row.change_rate).toFixed(0) }}%</span>
         </template>
       </el-table-column>
       <el-table-column prop="order_amount" :label="$t('table.order_amount')" sortable width="90px" align="left">
