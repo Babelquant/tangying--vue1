@@ -145,6 +145,7 @@ export default {
     delete: '删除',
     cancel: '取 消',
     confirm: '确 定',
+    bid_price: '集合竞价',
     stockName: '名称',
     rank_change: '排名上升',
     time_preview: '今日分时预览',

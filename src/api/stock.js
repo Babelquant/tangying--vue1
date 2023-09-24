@@ -103,9 +103,9 @@ export function deleteProduct(query) {
   })
 }
 
-export function fetchKeepaData(query) {
+export function fetchAbnormalBidprice(query) {
   return request({
-    url: '/data/product/keepadata/list',
+    url: '/data/abnormal_bidprice/list',
     method: 'get',
     params: query
   })

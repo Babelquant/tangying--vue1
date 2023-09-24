@@ -1,8 +1,4 @@
 <template>
-  <!-- <div>
-    <p class="stock-info-annotation">公司亮点：{{ zyyw.lightspot }}</p>
-    <p class="stock-info-annotation">主营业务：{{ zyyw.major }}</p>
-  </div> -->
   <div :class="className" :style="{height:height,width:width}" />
 </template>
 
@@ -10,7 +6,6 @@
 import * as echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 // import resize from './mixins/resize'
-import { fetchStockCandlestick } from '@/api/stock'
 
 export default {
   // mixins: [resize],
@@ -31,9 +26,11 @@ export default {
       type: Boolean,
       default: true
     },
-    code: {
-      type: String,
-      required: true
+    chartData: {
+      type: Array,
+      default: function(){
+        return []
+      }
     }
   },
   data() {
@@ -42,17 +39,13 @@ export default {
     }
   },
   watch: {
-    code: {
+    chartData: {
+      deep: true,
       handler(val) {
         this.chart.clear()
-        fetchStockCandlestick({ code: val }).then(res => {
-          this.setOptions(res.data)
-        })
+        this.setOptions(val)
       }
     }
-    // code(newVal,oldVal) {
-    //     console.log("new val")
-    // }
   },
   mounted() {
     this.$nextTick(() => {
@@ -69,9 +62,6 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-      fetchStockCandlestick({ code: this.code }).then(res => {
-        this.setOptions(res.data)
-      })
     },
     setOptions(val) {
       const upColor = '#00da3c'
@@ -109,8 +99,8 @@ export default {
         return result
       }
       // 深拷贝
-      // const candlestickData = JSON.parse(JSON.stringify(val))
-      const data = splitData(val)
+      const candlestickData = JSON.parse(JSON.stringify(val))
+      const data = splitData(candlestickData)
       this.chart.setOption({
         animation: false,
         legend: {
@@ -156,7 +146,9 @@ export default {
                 '成交额: ',
                 par.data[6] / 10000 > 10000 ? (par.data[6] / 100000000).toFixed(1) + '亿元<br/>' : Math.round(par.data[6] / 10000) + '万元<br/>',
                 '涨跌幅: <span style="color:red">+' + par.data[8] + '%</span><br/>',
-                '振幅: ' + par.data[7] + '%'
+                '振幅: ' + par.data[7] + '%</span><br/>',
+                '换手率: ' + par.data[10] + '%</span><br/>',
+                '排名: ' + par.data[11]
               ].join('')
             } else {
               return [
@@ -169,7 +161,9 @@ export default {
                 '成交额: ',
                 par.data[6] / 10000 > 10000 ? (par.data[6] / 100000000).toFixed(1) + '亿元<br/>' : Math.round(par.data[6] / 10000) + '万元<br/>',
                 '涨跌幅: <span style="color:green">' + par.data[8] + '%</span><br/>',
-                '振幅: ' + par.data[7] + '%'
+                '振幅: ' + par.data[7] + '%</span><br/>',
+                '换手率: ' + par.data[10] + '%</span><br/>',
+                '排名: ' + par.data[11]
               ].join('')
             }
           }

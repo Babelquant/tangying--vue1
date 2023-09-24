@@ -97,7 +97,7 @@
         <span>{{ stockName }}</span>
         <span class="candlestick-title">{{ zyyw }}</span>
       </template>
-      <candlestick-chart :code="code" />
+      <candlestick-chart v-loading="candlestickLoading" :chartData="chartData" />
     </el-dialog>
   </div>
 </template>
@@ -107,7 +107,7 @@ import * as echarts from 'echarts'
 import CandlestickChart from './CandlestickChart'
 import PreviewChart from './PreviewChart'
 
-import { fetchStockHistoryRank, fetchStockZy } from '@/api/stock'
+import { fetchStockHistoryRank, fetchStockZy, fetchStockCandlestick } from '@/api/stock'
 
 export default {
   components: {
@@ -127,7 +127,8 @@ export default {
     return {
       list: null,
       chart: null,
-      code: '',
+      candlestickLoading: false,
+      chartData: [],
       stockName: '',
       zyyw: '',
       reason_type_search: '',
@@ -166,17 +167,22 @@ export default {
   methods: {
     handleNameClick(row) {
       this.stockName = row.name
+      this.candlestickLoading = true
       fetchStockZy({code: row.code}).then(res => {
         this.zyyw = res.data
         this.dialogCdstVisible = true
       })
-      this.$set(this, 'code', row.code)
+      fetchStockCandlestick({ code: row.code }).then(res => {
+        this.chartData = res.data
+        // this.$set(this, 'chartData', res.data)
+        this.candlestickLoading = false
+      })
     },
     handlePopShow(code) {
-      // this.$nextTick(() => {
-      //   this.chart = echarts.init(this.$refs[code])
-      // })
-      this.chart = echarts.init(this.$refs[code])
+      this.$nextTick(() => {
+        this.chart = echarts.init(this.$refs[code])
+      })
+      // this.chart = echarts.init(this.$refs[code])
       this.popLoading = true
       fetchStockHistoryRank({ code: code }).then(res => {
         this.chart.setOption({
